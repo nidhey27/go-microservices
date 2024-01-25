@@ -81,6 +81,21 @@ services:
     #   mode: replicated
     #   replicas: 1
 
+  listner-service:
+    build: 
+      context: ./../listner-service
+      dockerfile: ./../listner-service/listner-service.dockerfile
+    # restart: always
+    ports:
+      - "8084:80"
+    develop:
+      watch:
+        - action: sync
+          path: ./../listner-service
+          target: /app
+    # deploy:
+    #   mode: replicated
+    #   replicas: 1
 
   postgres:
     image: 'postgres:14.0'
@@ -112,3 +127,10 @@ services:
     ports:
       - '1025:1025'
       - '8025:8025'
+
+  rabbitmq:
+    image: rabbitmq:3.9-alpine
+    ports:
+      - "5672:5672"
+    volumes:
+      - ./db-data/rabbitmq/:/var/lib/rabbitmq
